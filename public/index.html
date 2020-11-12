@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ログイン画面</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!--初期インクルードファイル-->
+        <script src="login.js"></script>
+        <script src="wait.js"></script>
+    </head>
+    <body>
+        <!--待機画面用div要素-->
+        <div>待機中</div><br>
+        <div id="entry_plan"></div>
+        <div id="player"style="display"></div>
+
+        <!--なんかコレないとio is not difindする-->
+        <script src="socket.io/socket.io.js"></script>
+
+        <!--GETを送信するフォーム-->
+        <form name="send" ACTION="prototype.html" METHOD="GET">
+            <input type="hidden" name="name" value="">
+        </form>
+
+        <script type="text/javascript">
+            var socket = io.connect();//socket.ioを行うのに必要な変数
+            //===============<以下mein関数>================
+            window.onload=function(){
+                legin();
+                naming();
+                initial();
+                setInterval(initial,100);
+            }
+            //============================================
+        </script>
+    </body>
+</html>

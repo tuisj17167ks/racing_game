@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>ゼミプロト</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{background-color: #ddd;}
+canvas{background-color: #fff;}
+</style>
+</head>
+<body>
+<canvas id="view" width = "700px" height = "500px"></canvas><!--スクリプト内だとだめぽ-->
+
+<!--操作用ボタン設置-->
+<input type="button" onmousedown="click_button_up();" onmouseup="unlook();"value = "上" style="position: absolute; left: 630px; top: 400px" id="up"/>
+<input type="button" onmousedown="click_button_left();" onmouseup="unlook();"value = "左" style="position: absolute; left: 600px; top: 425px"id="left"/>
+<input type="button" onmousedown="click_button_right();" onmouseup="unlook();"value = "右" style="position: absolute; left: 660px; top: 425px"id="right"/>
+<input type="button" onmousedown="click_button_down();" onmouseup="unlook();" value = "下" style="position: absolute; left: 630px; top: 450px"id="down"/>
+
+<script src="socket.io/socket.io.js"></script><!--なんかコレないとio is not difindする-->
+<script src="pointer.js"></script>
+<script type="text/javascript">
+
+window.onload=function(){
+    title();
+    initial();
+    setInterval(loft,1000);
+    art();
+}
+
+
+
+</script>
+</body>
+</html>
