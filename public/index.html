@@ -1,37 +1,1780 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
-    <head>
-        <title>ログイン画面</title>
+<head>
+        <title>ゼミプロト</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!--初期インクルードファイル-->
-        <script src="login.js"></script>
-        <script src="wait.js"></script>
-    </head>
-    <body>
-        <!--待機画面用div要素-->
-        <div>待機中</div><br>
-        <div id="entry_plan"></div>
-        <div id="player"style="display"></div>
+        <style>
+         body{background-color: #ddd;}
+canvas{background-color: #fff;}
+</style>  
+<canvas id="view" width ="700px" height = "500px"></canvas><!--スクリプト内だとだめぽ-->
 
-        <!--なんかコレないとio is not difindする-->
-        <script src="socket.io/socket.io.js"></script>
+<script src="socket.io/socket.io.js"></script><!--なんかコレないとio is not difindする-->
+<script type="text/javascript">
+var socket =io.connect();
+var login=false;
+var alogin=false;
+var zlogin=false;
+var pselect=false;
+var pone=false;
+var ptwo=false;
+var pthree=false;
+var pfour=false;
+var pselemessage=new Image();
+var sita=new Image();
+var psele=new Image();
+var psele2=new Image();
+var image0=new Image(); 
+var count0=new Image(); 
+var count4=new Image(); 
+var count3=new Image(); 
+var count2=new Image(); 
+var count1=new Image(); 
+var go=new Image(); 
+var lap1=new Image(); 
+var lap2=new Image(); 
+var lap3=new Image(); 
+var st1=new Image(); 
+var nd2=new Image(); 
+var rd3=new Image(); 
+var th4=new Image(); 
+var lapimage=new Image();
+var dashban=new Image();
+var ngdashban=new Image();
+var aura=new Image();
+var g1=false;
+var g2=false;
+var g3=false;
+var g4=false;
+var auraf=false;
+var onerank=0;
+var tworank=0;
+var threerank=0;
+var fourrank=0;
+var membernum=0;
+var gameend=false;
+var dashflag=true;
+var memberselect=false;
+var c3=false;
+var c2=false;
+var c1=false;
+var cgo=false;
+var itiyonx=0;
+var itiyony=0;
+var sitax=215;
+var sitay=130;
+var sitanum=1;
 
-        <!--GETを送信するフォーム-->
-        <form name="send" ACTION="prototype.html" METHOD="GET">
-            <input type="hidden" name="name" value="">
-        </form>
+var inpnum=null;
+var pnum=null;
+ var canvas=document.getElementById('view');//canvasAPI使うためのやつ。絵が使えるも
+   var ctx=canvas.getContext('2d');
 
-        <script type="text/javascript">
-            var socket = io.connect();//socket.ioを行うのに必要な変数
-            //===============<以下mein関数>================
-            window.onload=function(){
-                legin();
-                naming();
-                initial();
-                setInterval(initial,100);
-            }
-            //============================================
-        </script>
-    </body>
+socket.emit("loginstart");
+socket.on("loginstart",function(spone,sptwo,spthree,spfour,memnum){
+pone=spone;
+ptwo=sptwo;
+pthree=spthree;
+pfour=spfour;
+membernum=memnum;
+}
+);
+
+setInterval(drawlogintime,100);
+function playernum(){
+
+}
+
+function memnum(){
+
+//console.log("fmem");
+socket.emit("memb");
+//console.log(membernum);
+}
+
+socket.on("memb",function(memnum){
+membernum=memnum;
+//console.log(membernum);
+socket.emit("loginstart");
+}
+);
+
+
+
+
+//drawlogintime();
+
+
+socket.on("loginone",function(spone){//使ってない感
+pone=spone;
+}
+);
+
+socket.on("logintwo",function(sptwo){
+ptwo=sptwo;
+}
+);
+
+
+socket.on("loginfinal",function(pone,ptwo,pthree,pfour,member){
+if(pnum==1){
+//console.log("pnum==1");
+//console.log("member"+member);
+//console.log("membernumnazeka"+membernum);
+if(membernum==1){
+//console.log("membernum==1");
+if(pone==false){
+socket.emit("loginfinal");
+}else{
+socket.emit("loginfinalfinal");
+}
+}
+
+
+else if(membernum==2){
+//console.log("membernum==2");
+if(pone==false||ptwo==false){
+socket.emit("loginfinal");
+}else{
+socket.emit("loginfinalfinal");
+}
+}
+
+
+else if(membernum==3){
+//console.log("membernum==3");
+if(pone==false||ptwo==false||pthree==false){
+socket.emit("loginfinal");
+}else{
+socket.emit("loginfinalfinal");
+}
+}
+
+
+else if(membernum==4){
+//console.log("membernum==4");
+if(pone==false||ptwo==false||pthree==false||pfour==false){
+socket.emit("loginfinal");
+}else{
+socket.emit("loginfinalfinal");
+}
+}
+
+
+}
+}
+);
+
+socket.on("loginfinalfinal",function(){
+//console.log("finalfinal");
+alogin=true;
+countdown();
+}
+);
+
+socket.on("reset",function(goal1,goal2){//使ってないし4人未対応
+if(goal1==false||goal2==false){
+
+socket.emit("reset");
+}else{
+
+reset();
+}
+}
+);
+
+socket.on("escreset",function(){
+reset();
+}
+);
+
+function countdown(){
+draw3();
+setTimeout(draw2,1000);
+setTimeout(draw1,2000);
+setTimeout(drawgo,3000);
+setTimeout(logintrue,3000);
+setTimeout(clearcount,6000);
+}
+
+function logintrue(){
+login=true;
+}
+
+//setInterval(d3,30);
+//setInterval(d2,30);
+//setInterval(d1,30);
+//setInterval(dgo,30);
+
+setInterval(souone,1000);//1秒ごとに1pが鯖に自分の座標を報告する関数を実行
+setInterval(soutwo,1000);
+setInterval(southree,1000);
+setInterval(soufour,1000);
+setInterval(jyuone,1000);
+setInterval(jyutwo,1000);
+setInterval(jyuthree,1000);
+setInterval(jyufour,1000);
+
+
+
+
+
+
+
+
+function souone(){//1pが鯖に自分の座標を報告する関数
+if(login==true){
+if(pnum==1){
+
+socket.emit("souone",pnum,mycarx,mycary,onehandle);//鯖に,1pが送信するときの処理(向こうのsouone)を,pnum等3つのデータを送りつつ実行してもらう
+}
+}
+}
+
+
+function soutwo(){
+if(login==true){
+if(pnum==2){
+
+socket.emit("soutwo",pnum,morecars1x,morecars1y,twohandle);
+}
+}
+}
+
+function southree(){
+if(login==true){
+if(pnum==3){
+
+socket.emit("southree",pnum,morecars2x,morecars2y,threehandle);
+}
+}
+}
+
+function soufour(){
+if(login==true){
+if(pnum==4){
+
+socket.emit("soufour",pnum,morecars3x,morecars3y,fourhandle);
+}
+}
+}
+
+
+
+
+
+function jyuone(){//1pが2pの位置を教えてもらう関数(pnum送る意味あったっけ？て感じ)
+if(login==true){
+if(pnum==1){
+
+socket.emit("jyuone",pnum);
+}
+}
+}
+
+
+function jyutwo(){
+if(login==true){
+if(pnum==2){
+
+socket.emit("jyutwo",pnum);
+}
+}
+}
+
+function jyuthree(){
+if(login==true){
+if(pnum==3){
+
+socket.emit("jyuthree",pnum);
+}
+}
+}
+
+function jyufour(){
+if(login==true){
+if(pnum==4){
+
+socket.emit("jyufour",pnum);
+}
+}
+}
+
+
+
+
+
+
+
+socket.on("jyuone",function(newtwox,newtwoy,thandle,newthreex,newthreey,thhandle,newfourx,newfoury,fhandle){
+if(pnum==1){
+//console.log(pnum);
+//console.log("jyuone");
+morecars1x=newtwox;
+morecars1y=newtwoy;
+twohandle=thandle;
+morecars2x=newthreex;
+morecars2y=newthreey;
+threehandle=thhandle;
+morecars3x=newfourx;
+morecars3y=newfoury;
+fourhandle=fhandle;
+
+}
+}
+);
+socket.on("jyutwo",function(newonex,newoney,ohandle,newthreex,newthreey,thhandle,newfourx,newfoury,fhandle){
+if(pnum==2){
+//console.log("jyutwo");
+mycarx=newonex;
+mycary=newoney;
+onehandle=ohandle;
+morecars2x=newthreex;
+morecars2y=newthreey;
+threehandle=thhandle;
+morecars3x=newfourx;
+morecars3y=newfoury;
+fourhandle=fhandle;
+
+}
+}
+);
+
+socket.on("jyuthree",function(newonex,newoney,ohandle,newtwox,newtwoy,thandle,newfourx,newfoury,fhandle){
+if(pnum==3){
+//console.log("jyuthree");
+mycarx=newonex;
+mycary=newoney;
+onehandle=ohandle;
+morecars1x=newtwox;
+morecars1y=newtwoy;
+twohandle=thandle;
+morecars3x=newfourx;
+morecars3y=newfoury;
+fourhandle=fhandle;
+
+}
+}
+);
+
+socket.on("jyufour",function(newonex,newoney,ohandle,newtwox,newtwoy,thandle,newthreex,newthreey,thhandle){
+if(pnum==4){
+//console.log("jyufour");
+mycarx=newonex;
+mycary=newoney;
+onehandle=ohandle;
+morecars1x=newtwox;
+morecars1y=newtwoy;
+twohandle=thandle;
+morecars2x=newthreex;
+morecars2y=newthreey;
+threehandle=thhandle;
+}
+}
+);
+
+
+
+
+
+
+
+
+
+
+socket.on("goalone",function(rank){
+onerank=rank;
+//socket.emit("reset");
+}
+);
+
+socket.on("goaltwo",function(rank){
+tworank=rank;
+//socket.emit("reset");
+}
+);
+
+socket.on("goalthree",function(rank){
+threerank=rank;
+//socket.emit("reset");
+}
+);
+
+socket.on("goalfour",function(rank){
+fourrank=rank;
+//socket.emit("reset");
+}
+);
+
+
+
+
+var image = new Image();
+var image2 = new Image();
+var image3 = new Image();
+var image4 = new Image();
+
+var simage=new Image();
+
+var escpressed=false;
+var uppressed=false;//ここキーボードの判定の変数
+var leftpressed = false;
+var rightpressed = false;
+var downpressed=false;
+var moreuppressed1=false;
+var accelpressed = false;
+var morerightpressed1 = false;
+var moredownpressed1=false;
+var beforeuppressed=false;//ここキーボードの判定の変数
+var beforeleftpressed = false;
+var beforerightpressed = false;
+var beforedownpressed=false;
+
+
+
+
+var mycarx=0;//車の座標ね
+var mycary=200;
+var omyx=0;
+var omyy=0;
+var morecars1x=15;
+var morecars1y=215;
+var morecars2x=30;
+var morecars2y=230;
+var morecars3x=45;
+var morecars3y=245;
+
+
+
+var onehandle=1.5;
+var twohandle=1.5;
+var threehandle=1.5;
+var fourhandle=1.5;
+
+var angle=0.0;
+var pi=Math.PI;
+var morecars1dx=0;
+var morecars1dy=0;
+var acceleration=0.0;
+var friction=0.1;
+var accellimit=10.0;
+
+var ax=100;
+var bx=600;
+var cx=600;
+var dx=100;
+
+var ay=100;
+var by=100;
+var cy=400;
+var dy=400;
+
+var fx=100;
+var ffx=700;
+var sx=0;
+var gx=100;
+
+var fy=0;
+var ffy=400;
+var sy=200;
+var gy=200;
+
+var lapx=630;
+var lapy=10;
+
+var f=false;
+var ff=false;
+var blap=0;
+var lap=1;
+
+
+
+
+
+
+setInterval(roop,30);//ループ関数をしつこく呼ぶ
+function reset(){
+
+ g1=false;
+ g2=false;
+ g3=false;
+ g4=false;
+ auraf=false;
+ onerank=0;
+ tworank=0;
+ threerank=0;
+ fourrank=0;
+
+ gameend=false;
+ dashflag=true;
+
+ c3=false;
+ c2=false;
+ c1=false;
+ cgo=false;
+
+
+mycarx=0;//車の座標ね
+ mycary=200;
+omyx=0;
+ omyy=0;
+ morecars1x=15;
+ morecars1y=215;
+morecars2x=30;
+ morecars2y=230;
+ morecars3x=45;
+ morecars3y=245;
+
+
+
+
+ onehandle=1.5;
+ twohandle=1.5;
+threehandle=1.5;
+fourhandle=1.5;
+
+
+ angle=0.0;
+
+ morecars1dx=0;
+ morecars1dy=0;
+ acceleration=0.0;
+
+
+ f=false;
+ ff=false;
+ blap=0;
+ lap=1;
+login=false;
+countdown();
+}
+
+document.addEventListener("keydown",function(e){//ログイン時の操作用。e is not difinedになるからこの書き方のほうがいいのかも
+
+if(alogin==false){
+if(pnum!=1){
+memnum();
+}
+if(e.keyCode == 37) {
+sitanum-=1
+if(sitanum==0){
+sitanum=4;
+}
+        }
+        
+if(e.keyCode == 39) {
+rightpressed = true; 
+sitanum+=1;          
+        }
+   
+sitanum%=4;
+if(sitanum==0){
+sitanum=4;
+}
+
+switch(sitanum){
+case 1:
+sitax=215;
+break;
+
+case 2:
+sitax=280;
+break;
+
+case 3:
+sitax=345;
+break;
+
+case 4:
+sitax=410;
+break;
+}
+if(e.keyCode == 13) {
+enterpressed = true; 
+
+
+
+if(pone==false&&sitanum==1){
+pnum=1;
+pone=true;
+pselect=true;
+}
+else if(pnum==1){
+membernum=sitanum;
+//console.log(membernum+"kotei");
+memberselect=true;
+socket.emit("login",pnum,membernum);//ログイン処理をserver.jsに求める
+zlogin=true;
+}
+else if(ptwo==false&sitanum==2&&membernum>=2){
+pnum=2;
+ptwo=true;
+pselect=true;
+socket.emit("login",pnum,membernum);//ログイン処理をserver.jsに求める
+zlogin=true;
+}
+else if(pthree==false&sitanum==3&&membernum>=3){
+pnum=3;
+pthree=true;
+pselect=true;
+socket.emit("login",pnum,membernum);//ログイン処理をserver.jsに求める
+zlogin=true;
+}
+else if(pfour==false&sitanum==4&&membernum>=4){
+pnum=4;
+pfour=true;
+pselect=true;
+socket.emit("login",pnum,membernum);//ログイン処理をserver.jsに求める
+zlogin=true;
+}
+
+        
+ }
+}
+    }
+);
+
+
+
+
+function keyDownHandler(e) {//キーボード押してるかどうか
+
+if(e.keyCode == 27) {
+            escpressed = true;
+        }
+        if(e.keyCode == 38) {
+            uppressed = true;
+            
+        }
+        if(e.keyCode == 37) {
+            leftpressed = true;
+            
+        }
+         if(e.keyCode == 39) {
+          rightpressed = true; 
+         
+          
+        }
+        if(e.keyCode == 40) {
+          downpressed = true; 
+         
+          
+        }
+          if(e.keyCode == 87) {
+            moreuppressed1 = true;
+        }
+        if(e.keyCode == 65) {
+            accelpressed = true;
+        }
+         if(e.keyCode == 68) {
+          morerightpressed1 = true; 
+          
+        }
+        if(e.keyCode == 83) {
+          moredownpressed1 = true; 
+          
+        }
+        
+        
+        
+    }
+    function keyUpHandler(e) {
+
+   if(e.keyCode == 27) {
+            escpressed = false;
+        }
+    
+        if(e.keyCode == 38) {
+            uppressed = false;
+             
+        }
+        
+         if(e.keyCode == 37) {
+            leftpressed = false;
+            
+        }
+         if(e.keyCode == 39) {
+            rightpressed = false;
+            
+            
+        }
+        if(e.keyCode == 40) {
+            downpressed = false;
+            
+            
+        }
+        if(e.keyCode == 87) {
+            moreuppressed1 = false;
+        }
+        if(e.keyCode == 65) {
+            accelpressed = false;
+        }
+         if(e.keyCode == 68) {
+          morerightpressed1 = false; 
+          
+        }
+        if(e.keyCode == 83) {
+          moredownpressed1 = false; 
+          
+        }
+        
+    }
+
+function calc(){//ハンドルと加速
+if(accelpressed==true){
+acceleration+=0.2;
+if(acceleration>accellimit){
+acceleration=accellimit;
+}
+}
+if(accelpressed==false){
+acceleration-=0.2;
+if(acceleration<0.0){
+acceleration=0.0
+}
+}
+
+if(leftpressed==true){
+if(pnum==1){
+onehandle-=0.05;
+if(onehandle==2){
+onehandle=0.0;
+}
+}
+else if(pnum==2){
+twohandle-=0.05;
+if(twohandle==2){
+twohandle=0.0;
+}
+}
+else if(pnum==3){
+threehandle-=0.05;
+if(threehandle==2){
+threehandle=0.0;
+}
+}
+else if(pnum==4){
+fourhandle-=0.05;
+if(fourhandle==2){
+fourhandle=0.0;
+}
+}
+
+
+
+
+
+
+}
+
+if(rightpressed==true){
+if(pnum==1){
+onehandle+=0.05;
+if(onehandle==-0.2){
+onehandle=1.8;
+}
+}
+else if(pnum==2){
+twohandle+=0.05;
+if(twohandle==-0.2){
+twohandle=1.8;
+}
+}
+else if(pnum==3){
+threehandle+=0.05;
+if(threehandle==-0.2){
+threehandle=1.8;
+}
+}
+else if(pnum==4){
+fourhandle+=0.05;
+if(fourhandle==-0.2){
+fourhandle=1.8;
+}
+}
+
+
+
+
+}
+if(pnum==1){
+angle=onehandle*pi;
+}
+else if(pnum==2){
+angle=twohandle*pi;
+}
+else if(pnum==3){
+angle=threehandle*pi;
+}
+else if(pnum==4){
+angle=fourhandle*pi;
+}
+
+
+
+
+}
+
+  function alimitfin(){
+  auraf=false;
+accellimit=10.0;
+
+setTimeout(tdashflag,7000);
+  }
+function tdashflag(){
+socket.emit("tdashflag");
+}
+  socket.on("tdashflag",function(){
+  dashflag=true;
+    }
+    );
+    
+    socket.on("fdashflag",function(pn){
+  dashflag=false;
+    }
+    );
+
+
+
+    
+function mycarmove(){//車が動くときの処理
+     if(pnum==1){
+	omyx=mycarx;
+     omyy=mycary;
+    mycarx+=acceleration*(Math.cos(angle));
+    mycary+=acceleration*(Math.sin(angle));
+   
+
+if(mycarx<0){
+mycarx=1;
+acceleration-=0.4;
+}
+if(mycarx>700){
+mycarx=699;
+acceleration-=0.4;
+}
+if(mycary<0){
+mycary=1;
+acceleration-=0.4;
+}
+if(mycary>500){
+mycary=499;
+acceleration-=0.4;
+}
+if(570<=mycarx-20&&mycarx-20<=630&&470<=mycary-20&&mycary-20<=500&&dashflag==true){
+auraf=true;
+accellimit=20.0;
+acceleration=accellimit;
+setTimeout(alimitfin,800);
+socket.emit("fdashflag",pnum);
+}
+if(570<=mycarx+20&&mycarx+20<=630&&470<=mycary-20&&mycary-20<=500&&dashflag==true){
+auraf=true;
+accellimit=20.0;
+acceleration=accellimit;
+setTimeout(alimitfin,800);
+socket.emit("fdashflag",pnum);
+}
+if(570<=mycarx-20&&mycarx-20<=630&&470<=mycary+20&&mycary+20<=500&&dashflag==true){
+auraf=true;
+accellimit=20.0;
+acceleration=accellimit;
+setTimeout(alimitfin,800);
+socket.emit("fdashflag",pnum);
+}
+if(570<=mycarx+20&&mycarx+20<=630&&470<=mycary+20&&mycary+20<=500&&dashflag==true){
+auraf=true;
+accellimit=20.0;
+acceleration=accellimit;
+setTimeout(alimitfin,800);
+//dashflag=false;
+socket.emit("fdashflag",pnum);
+}
+
+
+
+
+
+
+
+    
+if((((bx-ax)*(omyy-ay)-(by-ay)*(mycarx-ax))*((bx-ax)*(mycary-ay)-(by-ay)*(omyx-ax)))<0&&(((mycarx-omyx)*(ay-omyy)-(mycary-omyy)*(ax-omyx))*((mycarx-omyx)*(by-omyy)-(mycary-omyy)*(bx-omyx)))<0){//ABと接触
+mycary=99;
+acceleration-=0.4;
+}
+if((((dx-cx)*(omyy-cy)-(dy-cy)*(mycarx-cx))*((dx-cx)*(mycary-cy)-(dy-cy)*(omyx-cx)))<0&&(((mycarx-omyx)*(cy-omyy)-(mycary-omyy)*(cx-omyx))*((mycarx-omyx)*(dy-omyy)-(mycary-omyy)*(dx-omyx)))<0){//CDと接触
+mycary=401;
+acceleration-=0.4;
+}
+if((((bx-cx)*(omyy-cy)-(by-cy)*(mycarx-cx))*((bx-cx)*(mycary-cy)-(by-cy)*(omyx-cx)))<0&&(((mycarx-omyx)*(cy-omyy)-(mycary-omyy)*(cx-omyx))*((mycarx-omyx)*(by-omyy)-(mycary-omyy)*(bx-omyx)))<0){//BCと接触
+mycarx=601;
+acceleration-=0.4;
+}
+if((((dx-ax)*(omyy-ay)-(dy-ay)*(mycarx-ax))*((dx-ax)*(mycary-ay)-(dy-ay)*(omyx-ax)))<0&&(((mycarx-omyx)*(ay-omyy)-(mycary-omyy)*(ax-omyx))*((mycarx-omyx)*(dy-omyy)-(mycary-omyy)*(dx-omyx)))<0){//ADと接触
+mycarx=99;
+acceleration-=0.4;
+}
+
+
+if((((fx-ax)*(omyy-ay)-(fy-ay)*(mycarx-ax))*((fx-ax)*(mycary-ay)-(fy-ay)*(omyx-ax)))<0&&(((mycarx-omyx)*(ay-omyy)-(mycary-omyy)*(ax-omyx))*((mycarx-omyx)*(fy-omyy)-(mycary-omyy)*(fx-omyx)))<0&&ff==false){//Afと接触
+f=true;
+}
+if((((ffx-cx)*(omyy-cy)-(ffy-cy)*(mycarx-cx))*((ffx-cx)*(mycary-cy)-(ffy-cy)*(omyx-cx)))<0&&(((mycarx-omyx)*(cy-omyy)-(mycary-omyy)*(cx-omyx))*((mycarx-omyx)*(ffy-omyy)-(mycary-omyy)*(ffx-omyx)))<0){//Cffと接触
+if(ff==false){
+ff=true;
+}else{
+ff=false;
+}
+}
+if((((sx-gx)*(omyy-gy)-(sy-gy)*(mycarx-gx))*((sx-gx)*(mycary-gy)-(sy-gy)*(omyx-gx)))<0&&(((mycarx-omyx)*(gy-omyy)-(mycary-omyy)*(gx-omyx))*((mycarx-omyx)*(sy-omyy)-(mycary-omyy)*(sx-omyx)))<0){//BCと接触
+if(f==true&&ff==true){
+blap=lap;
+if(blap==3&&lap==3){
+socket.emit("goalone");
+}
+lap++;
+
+//console.log(rap);
+}
+f=false;
+ff=false;
+}
+
+
+
+
+
+ }
+
+
+    
+}
+
+function morecarsmove1(){
+     if(pnum==2){
+omyx=morecars1x;
+     omyy=morecars1y;
+     
+       morecars1x+=acceleration*(Math.cos(angle));
+    morecars1y+=acceleration*(Math.sin(angle));
+
+
+    
+
+if(morecars1x<0){
+morecars1x=1;
+acceleration-=0.4;
+}
+if(morecars1x>700){
+morecars1x=699;
+acceleration-=0.4;
+}
+if(morecars1y<0){
+morecars1y=1;
+acceleration-=0.4;
+}
+if(morecars1y>500){
+morecars1y=499;
+acceleration-=0.4;
+}
+
+if(570<=morecars1x-20&&morecars1x-20<=630&&470<=morecars1y-20&&morecars1y-20<=500&&dashflag==true){
+auraf=true;
+accellimit=20.0;
+acceleration=accellimit;
+setTimeout(alimitfin,800);
+socket.emit("fdashflag",pnum);
+}
+if(570<=morecars1x+20&&morecars1x+20<=630&&470<=morecars1y-20&&morecars1y-20<=500&&dashflag==true){
+auraf=true;
+accellimit=20.0;
+acceleration=accellimit;
+setTimeout(alimitfin,800);
+socket.emit("fdashflag",pnum);
+}
+if(570<=morecars1x-20&&morecars1x-20<=630&&470<=morecars1y+20&&morecars1y+20<=500&&dashflag==true){
+auraf=true;
+accellimit=20.0;
+acceleration=accellimit;
+setTimeout(alimitfin,800);
+socket.emit("fdashflag",pnum);
+}
+if(570<=morecars1x+20&&morecars1x+20<=630&&470<=morecars1y+20&&morecars1y+20<=500&&dashflag==true){
+auraf=true;
+accellimit=20.0;
+acceleration=accellimit;
+setTimeout(alimitfin,800);
+//dashflag=false;
+socket.emit("fdashflag",pnum);
+}
+
+
+
+
+if((((bx-ax)*(omyy-ay)-(by-ay)*(morecars1x-ax))*((bx-ax)*(morecars1y-ay)-(by-ay)*(omyx-ax)))<0&&(((morecars1x-omyx)*(ay-omyy)-(morecars1y-omyy)*(ax-omyx))*((morecars1x-omyx)*(by-omyy)-(morecars1y-omyy)*(bx-omyx)))<0){//ABと接触
+morecars1y=99;
+acceleration-=0.4;
+}
+if((((dx-cx)*(omyy-cy)-(dy-cy)*(morecars1x-cx))*((dx-cx)*(morecars1y-cy)-(dy-cy)*(omyx-cx)))<0&&(((morecars1x-omyx)*(cy-omyy)-(morecars1y-omyy)*(cx-omyx))*((morecars1x-omyx)*(dy-omyy)-(morecars1y-omyy)*(dx-omyx)))<0){//CDと接触
+morecars1y=401;
+acceleration-=0.4;
+}
+if((((bx-cx)*(omyy-cy)-(by-cy)*(morecars1x-cx))*((bx-cx)*(morecars1y-cy)-(by-cy)*(omyx-cx)))<0&&(((morecars1x-omyx)*(cy-omyy)-(morecars1y-omyy)*(cx-omyx))*((morecars1x-omyx)*(by-omyy)-(morecars1y-omyy)*(bx-omyx)))<0){//BCと接触
+morecars1x=601;
+acceleration-=0.4;
+}
+if((((dx-ax)*(omyy-ay)-(dy-ay)*(morecars1x-ax))*((dx-ax)*(morecars1y-ay)-(dy-ay)*(omyx-ax)))<0&&(((morecars1x-omyx)*(ay-omyy)-(morecars1y-omyy)*(ax-omyx))*((morecars1x-omyx)*(dy-omyy)-(morecars1y-omyy)*(dx-omyx)))<0){//ADと接触
+morecars1x=99;
+acceleration-=0.4;
+
+}
+
+if((((fx-ax)*(omyy-ay)-(fy-ay)*(morecars1x-ax))*((fx-ax)*(morecars1y-ay)-(fy-ay)*(omyx-ax)))<0&&(((morecars1x-omyx)*(ay-omyy)-(morecars1y-omyy)*(ax-omyx))*((morecars1x-omyx)*(fy-omyy)-(morecars1y-omyy)*(fx-omyx)))<0&&ff==false){//Afと接触
+f=true;
+}
+if((((ffx-cx)*(omyy-cy)-(ffy-cy)*(morecars1x-cx))*((ffx-cx)*(morecars1y-cy)-(ffy-cy)*(omyx-cx)))<0&&(((morecars1x-omyx)*(cy-omyy)-(morecars1y-omyy)*(cx-omyx))*((morecars1x-omyx)*(ffy-omyy)-(morecars1y-omyy)*(ffx-omyx)))<0){//Cffと接触
+if(ff==false){
+ff=true;
+}else{
+ff=false;
+}
+}
+if((((sx-gx)*(omyy-gy)-(sy-gy)*(morecars1x-gx))*((sx-gx)*(morecars1y-gy)-(sy-gy)*(omyx-gx)))<0&&(((morecars1x-omyx)*(gy-omyy)-(morecars1y-omyy)*(gx-omyx))*((morecars1x-omyx)*(sy-omyy)-(morecars1y-omyy)*(sx-omyx)))<0){//BCと接触
+if(f==true&&ff==true){
+blap=lap;
+if(blap==3&&lap==3){
+socket.emit("goaltwo");
+}
+lap++;
+}
+f=false;
+ff=false;
+}
+} 
+}
+
+
+
+
+
+function morecarsmove2(){
+     if(pnum==3){
+omyx=morecars2x;
+     omyy=morecars2y;
+     
+       morecars2x+=acceleration*(Math.cos(angle));
+    morecars2y+=acceleration*(Math.sin(angle));
+
+
+    
+
+if(morecars2x<0){
+morecars2x=1;
+acceleration-=0.4;
+}
+if(morecars2x>700){
+morecars2x=699;
+acceleration-=0.4;
+}
+if(morecars2y<0){
+morecars2y=1;
+acceleration-=0.4;
+}
+if(morecars2y>500){
+morecars2y=499;
+acceleration-=0.4;
+}
+
+if(570<=morecars2x-20&&morecars2x-20<=630&&470<=morecars2y-20&&morecars2y-20<=500&&dashflag==true){
+auraf=true;
+accellimit=20.0;
+acceleration=accellimit;
+setTimeout(alimitfin,800);
+socket.emit("fdashflag",pnum);
+}
+if(570<=morecars2x+20&&morecars2x+20<=630&&470<=morecars2y-20&&morecars2y-20<=500&&dashflag==true){
+auraf=true;
+accellimit=20.0;
+acceleration=accellimit;
+setTimeout(alimitfin,800);
+socket.emit("fdashflag",pnum);
+}
+if(570<=morecars2x-20&&morecars2x-20<=630&&470<=morecars2y+20&&morecars2y+20<=500&&dashflag==true){
+auraf=true;
+accellimit=20.0;
+acceleration=accellimit;
+setTimeout(alimitfin,800);
+socket.emit("fdashflag",pnum);
+}
+if(570<=morecars2x+20&&morecars2x+20<=630&&470<=morecars2y+20&&morecars2y+20<=500&&dashflag==true){
+auraf=true;
+accellimit=20.0;
+acceleration=accellimit;
+setTimeout(alimitfin,800);
+//dashflag=false;
+socket.emit("fdashflag",pnum);
+}
+
+
+
+
+if((((bx-ax)*(omyy-ay)-(by-ay)*(morecars2x-ax))*((bx-ax)*(morecars2y-ay)-(by-ay)*(omyx-ax)))<0&&(((morecars2x-omyx)*(ay-omyy)-(morecars2y-omyy)*(ax-omyx))*((morecars2x-omyx)*(by-omyy)-(morecars2y-omyy)*(bx-omyx)))<0){//ABと接触
+morecars2y=99;
+acceleration-=0.4;
+}
+if((((dx-cx)*(omyy-cy)-(dy-cy)*(morecars2x-cx))*((dx-cx)*(morecars2y-cy)-(dy-cy)*(omyx-cx)))<0&&(((morecars2x-omyx)*(cy-omyy)-(morecars2y-omyy)*(cx-omyx))*((morecars2x-omyx)*(dy-omyy)-(morecars2y-omyy)*(dx-omyx)))<0){//CDと接触
+morecars2y=401;
+acceleration-=0.4;
+}
+if((((bx-cx)*(omyy-cy)-(by-cy)*(morecars2x-cx))*((bx-cx)*(morecars2y-cy)-(by-cy)*(omyx-cx)))<0&&(((morecars2x-omyx)*(cy-omyy)-(morecars2y-omyy)*(cx-omyx))*((morecars2x-omyx)*(by-omyy)-(morecars2y-omyy)*(bx-omyx)))<0){//BCと接触
+morecars2x=601;
+acceleration-=0.4;
+}
+if((((dx-ax)*(omyy-ay)-(dy-ay)*(morecars2x-ax))*((dx-ax)*(morecars2y-ay)-(dy-ay)*(omyx-ax)))<0&&(((morecars2x-omyx)*(ay-omyy)-(morecars2y-omyy)*(ax-omyx))*((morecars2x-omyx)*(dy-omyy)-(morecars2y-omyy)*(dx-omyx)))<0){//ADと接触
+morecars2x=99;
+acceleration-=0.4;
+
+}
+
+if((((fx-ax)*(omyy-ay)-(fy-ay)*(morecars2x-ax))*((fx-ax)*(morecars2y-ay)-(fy-ay)*(omyx-ax)))<0&&(((morecars2x-omyx)*(ay-omyy)-(morecars2y-omyy)*(ax-omyx))*((morecars2x-omyx)*(fy-omyy)-(morecars2y-omyy)*(fx-omyx)))<0&&ff==false){//Afと接触
+f=true;
+}
+if((((ffx-cx)*(omyy-cy)-(ffy-cy)*(morecars2x-cx))*((ffx-cx)*(morecars2y-cy)-(ffy-cy)*(omyx-cx)))<0&&(((morecars2x-omyx)*(cy-omyy)-(morecars2y-omyy)*(cx-omyx))*((morecars2x-omyx)*(ffy-omyy)-(morecars2y-omyy)*(ffx-omyx)))<0){//Cffと接触
+if(ff==false){
+ff=true;
+}else{
+ff=false;
+}
+}
+if((((sx-gx)*(omyy-gy)-(sy-gy)*(morecars2x-gx))*((sx-gx)*(morecars2y-gy)-(sy-gy)*(omyx-gx)))<0&&(((morecars2x-omyx)*(gy-omyy)-(morecars2y-omyy)*(gx-omyx))*((morecars2x-omyx)*(sy-omyy)-(morecars2y-omyy)*(sx-omyx)))<0){//BCと接触
+if(f==true&&ff==true){
+blap=lap;
+if(blap==3&&lap==3){
+socket.emit("goalthree");
+}
+lap++;
+}
+f=false;
+ff=false;
+}
+} 
+}
+
+
+function morecarsmove3(){
+     if(pnum==4){
+omyx=morecars3x;
+     omyy=morecars3y;
+     
+       morecars3x+=acceleration*(Math.cos(angle));
+    morecars3y+=acceleration*(Math.sin(angle));
+
+
+    
+
+if(morecars3x<0){
+morecars3x=1;
+acceleration-=0.4;
+}
+if(morecars3x>700){
+morecars3x=699;
+acceleration-=0.4;
+}
+if(morecars3y<0){
+morecars3y=1;
+acceleration-=0.4;
+}
+if(morecars3y>500){
+morecars3y=499;
+acceleration-=0.4;
+}
+
+if(570<=morecars3x-20&&morecars3x-20<=630&&470<=morecars3y-20&&morecars3y-20<=500&&dashflag==true){
+auraf=true;
+accellimit=20.0;
+acceleration=accellimit;
+setTimeout(alimitfin,800);
+socket.emit("fdashflag",pnum);
+}
+if(570<=morecars3x+20&&morecars3x+20<=630&&470<=morecars3y-20&&morecars3y-20<=500&&dashflag==true){
+auraf=true;
+accellimit=20.0;
+acceleration=accellimit;
+setTimeout(alimitfin,800);
+socket.emit("fdashflag",pnum);
+}
+if(570<=morecars3x-20&&morecars3x-20<=630&&470<=morecars3y+20&&morecars3y+20<=500&&dashflag==true){
+auraf=true;
+accellimit=20.0;
+acceleration=accellimit;
+setTimeout(alimitfin,800);
+socket.emit("fdashflag",pnum);
+}
+if(570<=morecars3x+20&&morecars3x+20<=630&&470<=morecars3y+20&&morecars3y+20<=500&&dashflag==true){
+auraf=true;
+accellimit=20.0;
+acceleration=accellimit;
+setTimeout(alimitfin,800);
+//dashflag=false;
+socket.emit("fdashflag",pnum);
+}
+
+
+
+
+if((((bx-ax)*(omyy-ay)-(by-ay)*(morecars3x-ax))*((bx-ax)*(morecars3y-ay)-(by-ay)*(omyx-ax)))<0&&(((morecars3x-omyx)*(ay-omyy)-(morecars3y-omyy)*(ax-omyx))*((morecars3x-omyx)*(by-omyy)-(morecars3y-omyy)*(bx-omyx)))<0){//ABと接触
+morecars3y=99;
+acceleration-=0.4;
+}
+if((((dx-cx)*(omyy-cy)-(dy-cy)*(morecars3x-cx))*((dx-cx)*(morecars3y-cy)-(dy-cy)*(omyx-cx)))<0&&(((morecars3x-omyx)*(cy-omyy)-(morecars3y-omyy)*(cx-omyx))*((morecars3x-omyx)*(dy-omyy)-(morecars3y-omyy)*(dx-omyx)))<0){//CDと接触
+morecars3y=401;
+acceleration-=0.4;
+}
+if((((bx-cx)*(omyy-cy)-(by-cy)*(morecars3x-cx))*((bx-cx)*(morecars3y-cy)-(by-cy)*(omyx-cx)))<0&&(((morecars3x-omyx)*(cy-omyy)-(morecars3y-omyy)*(cx-omyx))*((morecars3x-omyx)*(by-omyy)-(morecars3y-omyy)*(bx-omyx)))<0){//BCと接触
+morecars3x=601;
+acceleration-=0.4;
+}
+if((((dx-ax)*(omyy-ay)-(dy-ay)*(morecars3x-ax))*((dx-ax)*(morecars3y-ay)-(dy-ay)*(omyx-ax)))<0&&(((morecars3x-omyx)*(ay-omyy)-(morecars3y-omyy)*(ax-omyx))*((morecars3x-omyx)*(dy-omyy)-(morecars3y-omyy)*(dx-omyx)))<0){//ADと接触
+morecars3x=99;
+acceleration-=0.4;
+
+}
+
+if((((fx-ax)*(omyy-ay)-(fy-ay)*(morecars3x-ax))*((fx-ax)*(morecars3y-ay)-(fy-ay)*(omyx-ax)))<0&&(((morecars3x-omyx)*(ay-omyy)-(morecars3y-omyy)*(ax-omyx))*((morecars3x-omyx)*(fy-omyy)-(morecars3y-omyy)*(fx-omyx)))<0&&ff==false){//Afと接触
+f=true;
+}
+if((((ffx-cx)*(omyy-cy)-(ffy-cy)*(morecars3x-cx))*((ffx-cx)*(morecars3y-cy)-(ffy-cy)*(omyx-cx)))<0&&(((morecars3x-omyx)*(cy-omyy)-(morecars3y-omyy)*(cx-omyx))*((morecars3x-omyx)*(ffy-omyy)-(morecars3y-omyy)*(ffx-omyx)))<0){//Cffと接触
+if(ff==false){
+ff=true;
+}else{
+ff=false;
+}
+}
+if((((sx-gx)*(omyy-gy)-(sy-gy)*(morecars3x-gx))*((sx-gx)*(morecars3y-gy)-(sy-gy)*(omyx-gx)))<0&&(((morecars3x-omyx)*(gy-omyy)-(morecars3y-omyy)*(gx-omyx))*((morecars3x-omyx)*(sy-omyy)-(morecars3y-omyy)*(sx-omyx)))<0){//BCと接触
+if(f==true&&ff==true){
+blap=lap;
+if(blap==3&&lap==3){
+socket.emit("goalfour");
+}
+lap++;
+}
+f=false;
+ff=false;
+}
+} 
+}
+
+pselemessage.src="./pselemessage.png";
+sita.src="./sita.png";
+psele.src="./psele.png";
+psele2.src="./psele2.png";
+count0.src="./0.png";
+count4.src="./4.png";
+count3.src="./3.png";
+count2.src="./2.png";
+count1.src="./1.png";
+go.src="./go.png";
+image0.src="./logintime.png";
+image.src = "./mycar.png";//画像
+image2.src = "./morecars1.png";
+image3.src = "./morecars2.png";
+image4.src = "./morecars3.png";
+simage.src="./stage1.png";
+lapimage.src="./lap.png";
+lap1.src="./1-3.png";
+lap2.src="./2-3.png";
+lap3.src="./3-3.png";
+st1.src="./1st.png";
+nd2.src="./2nd.png";
+rd3.src="./3rd.png";
+th4.src="./4th.png";
+dashban.src="./dash.png";
+ngdashban.src="./dashng.png";
+aura.src="./aura.png";
+
+
+
+function drawpsele(){
+if(zlogin==false){
+ctx.clearRect(0,0,700,500);
+
+if(pnum==1&&pselect==true){
+ctx.drawImage(psele2,0,0);
+}else{
+ctx.drawImage(psele,0,0);
+ctx.drawImage(pselemessage,0,0);
+switch(membernum){
+case 0:
+
+ctx.drawImage(count0,400,0);
+break;
+case 1:
+
+ctx.drawImage(count1,400,0);
+break;
+
+case 2:
+
+ctx.drawImage(count2,400,0);
+break;
+
+case 3:
+
+ctx.drawImage(count3,400,0);
+break;
+
+case 4:
+
+ctx.drawImage(count4,400,0);
+break;
+}
+}
+ctx.drawImage(sita,sitax,sitay);
+}
+}
+
+
+
+function draw(){//描画
+
+if(pnum==1){
+ctx.clearRect(0,0,700,500);
+ ctx.save();
+ctx.translate(mycarx+20,mycary);
+ctx.rotate((onehandle+0.5)*pi);
+ctx.translate(-(mycarx+20),-mycary);
+ctx.drawImage(image,mycarx,mycary);
+if(auraf==true){
+ctx.drawImage(aura,mycarx,mycary);
+}
+ctx.restore();
+if(membernum>=2){
+ctx.save();
+ctx.translate(morecars1x+20,morecars1y);
+ctx.rotate((twohandle+0.5)*pi);
+ctx.translate(-(morecars1x+20),-morecars1y);
+ctx.drawImage(image2,morecars1x,morecars1y);
+ctx.restore();
+}
+if(membernum>=3){
+ctx.save();
+ctx.translate(morecars2x+20,morecars2y);
+ctx.rotate((threehandle+0.5)*pi);
+ctx.translate(-(morecars2x+20),-morecars2y);
+ctx.drawImage(image3,morecars2x,morecars2y);
+ctx.restore();
+}
+if(membernum>=4){
+ctx.save();
+ctx.translate(morecars3x+20,morecars3y);
+ctx.rotate((fourhandle+0.5)*pi);
+ctx.translate(-(morecars3x+20),-morecars3y);
+ctx.drawImage(image4,morecars3x,morecars3y);
+ctx.restore();
+}
+ctx.drawImage(simage,0,0);
+ctx.drawImage(lapimage,lapx-40,lapy);
+if(dashflag==true){
+ctx.drawImage(dashban,570,465);
+}else{
+ctx.drawImage(ngdashban,570,465);
+}
+
+switch(onerank){
+case 0:
+
+break;
+case 1:
+ctx.drawImage(st1,320,210);
+break;
+
+case 2:
+ctx.drawImage(nd2,320,210);
+break;
+
+case 3:
+ctx.drawImage(rd3,320,210);
+break;
+
+case 4:
+ctx.drawImage(th4,320,210);
+break;
+}
+
+
+switch(lap){
+case 1:
+ctx.drawImage(lap1,lapx,lapy);
+break;
+
+case 2:
+ctx.drawImage(lap2,lapx,lapy);
+break;
+
+case 3:
+ctx.drawImage(lap3,lapx,lapy);
+break;
+
+}
+}
+
+if(pnum==2){
+ctx.clearRect(0,0,700,500);
+ ctx.save();
+ctx.translate(morecars1x+20,morecars1y);
+ctx.rotate((twohandle+0.5)*pi);
+ctx.translate(-(morecars1x+20),-morecars1y);
+ctx.drawImage(image2,morecars1x,morecars1y);
+if(auraf==true){
+ctx.drawImage(aura,morecars1x,morecars1y);
+}
+ctx.restore();
+
+ ctx.save();
+ctx.translate(mycarx+20,mycary);
+ctx.rotate((onehandle+0.5)*pi);
+ctx.translate(-(mycarx+20),-mycary);
+ctx.drawImage(image,mycarx,mycary);
+ctx.restore();
+
+if(membernum>=3){
+ ctx.save();
+ctx.translate(morecars2x+20,morecars2y);
+ctx.rotate((threehandle+0.5)*pi);
+ctx.translate(-(morecars2x+20),-morecars2y);
+ctx.drawImage(image3,morecars2x,morecars2y);
+ctx.restore();
+}
+if(membernum>=4){
+ ctx.save();
+ctx.translate(morecars3x+20,morecars3y);
+ctx.rotate((fourhandle+0.5)*pi);
+ctx.translate(-(morecars3x+20),-morecars3y);
+ctx.drawImage(image4,morecars3x,morecars3y);
+ctx.restore();
+}
+ctx.drawImage(simage,0,0);
+ctx.drawImage(lapimage,lapx-40,lapy);
+if(dashflag==true){
+ctx.drawImage(dashban,570,465);
+}else{
+ctx.drawImage(ngdashban,570,465);
+}
+switch(tworank){
+case 0:
+
+break;
+case 1:
+ctx.drawImage(st1,320,210);
+break;
+
+case 2:
+ctx.drawImage(nd2,320,210);
+break;
+
+case 3:
+ctx.drawImage(rd3,320,210);
+break;
+
+case 4:
+ctx.drawImage(th4,320,210);
+break;
+}
+
+switch(lap){
+case 1:
+
+ctx.drawImage(lap1,lapx,lapy);
+break;
+
+case 2:
+
+ctx.drawImage(lap2,lapx,lapy);
+break;
+
+case 3:
+
+ctx.drawImage(lap3,lapx,lapy);
+break;
+
+}
+}
+
+
+if(pnum==3){
+ctx.clearRect(0,0,700,500);
+ ctx.save();
+ctx.translate(morecars2x+20,morecars2y);
+ctx.rotate((threehandle+0.5)*pi);
+ctx.translate(-(morecars2x+20),-morecars2y);
+ctx.drawImage(image3,morecars2x,morecars2y);
+if(auraf==true){
+ctx.drawImage(aura,morecars2x,morecars2y);
+}
+ctx.restore();
+ ctx.save();
+ 
+ctx.translate(mycarx+20,mycary);
+ctx.rotate((onehandle+0.5)*pi);
+ctx.translate(-(mycarx+20),-mycary);
+ctx.drawImage(image,mycarx,mycary);
+ctx.restore();
+ ctx.save();
+ctx.translate(morecars1x+20,morecars1y);
+ctx.rotate((twohandle+0.5)*pi);
+ctx.translate(-(morecars1x+20),-morecars1y);
+ctx.drawImage(image2,morecars1x,morecars1y);
+ctx.restore();
+if(membernum>=4){
+ ctx.save();
+ctx.translate(morecars3x+20,morecars3y);
+ctx.rotate((fourhandle+0.5)*pi);
+ctx.translate(-(morecars3x+20),-morecars3y);
+ctx.drawImage(image4,morecars3x,morecars3y);
+ctx.restore();
+}
+ctx.drawImage(simage,0,0);
+ctx.drawImage(lapimage,lapx-40,lapy);
+if(dashflag==true){
+ctx.drawImage(dashban,570,465);
+}else{
+ctx.drawImage(ngdashban,570,465);
+}
+switch(threerank){
+case 0:
+
+break;
+case 1:
+ctx.drawImage(st1,320,210);
+break;
+
+case 2:
+ctx.drawImage(nd2,320,210);
+break;
+
+case 3:
+ctx.drawImage(rd3,320,210);
+break;
+
+case 4:
+ctx.drawImage(th4,320,210);
+break;
+}
+
+switch(lap){
+case 1:
+
+ctx.drawImage(lap1,lapx,lapy);
+break;
+
+case 2:
+
+ctx.drawImage(lap2,lapx,lapy);
+break;
+
+case 3:
+
+ctx.drawImage(lap3,lapx,lapy);
+break;
+
+}
+}
+
+
+if(pnum==4){
+ctx.clearRect(0,0,700,500);
+ ctx.save();
+ctx.translate(morecars3x+20,morecars3y);
+ctx.rotate((fourhandle+0.5)*pi);
+ctx.translate(-(morecars3x+20),-morecars3y);
+ctx.drawImage(image4,morecars3x,morecars3y);
+if(auraf==true){
+ctx.drawImage(aura,morecars3x,morecars3y);
+}
+ctx.restore();
+ ctx.save();
+ctx.translate(mycarx+20,mycary);
+ctx.rotate((onehandle+0.5)*pi);
+ctx.translate(-(mycarx+20),-mycary);
+ctx.drawImage(image,mycarx,mycary);
+ctx.restore();
+ ctx.save();
+ctx.translate(morecars1x+20,morecars1y);
+ctx.rotate((twohandle+0.5)*pi);
+ctx.translate(-(morecars1x+20),-morecars1y);
+ctx.drawImage(image2,morecars1x,morecars1y);
+ctx.restore();
+ ctx.save();
+ctx.translate(morecars2x+20,morecars2y);
+ctx.rotate((threehandle+0.5)*pi);
+ctx.translate(-(morecars2x+20),-morecars2y);
+ctx.drawImage(image3,morecars2x,morecars2y);
+ctx.restore();
+
+ctx.drawImage(simage,0,0);
+ctx.drawImage(lapimage,lapx-40,lapy);
+if(dashflag==true){
+ctx.drawImage(dashban,570,465);
+}else{
+ctx.drawImage(ngdashban,570,465);
+}
+switch(fourrank){
+case 0:
+
+break;
+case 1:
+ctx.drawImage(st1,320,210);
+break;
+
+case 2:
+ctx.drawImage(nd2,320,210);
+break;
+
+case 3:
+ctx.drawImage(rd3,320,210);
+break;
+
+case 4:
+ctx.drawImage(th4,320,210);
+break;
+}
+
+switch(lap){
+case 1:
+
+ctx.drawImage(lap1,lapx,lapy);
+break;
+
+case 2:
+
+ctx.drawImage(lap2,lapx,lapy);
+break;
+
+case 3:
+
+ctx.drawImage(lap3,lapx,lapy);
+break;
+
+}
+}
+}
+
+
+
+function drawlogintime(){
+if(alogin==false&&zlogin==true){
+ctx.clearRect(0,0,700,500);
+ctx.drawImage(image0,0,0);
+}
+}
+
+function draw3(){
+c3=true;
+
+}
+function d3(){
+if(c3==true){
+
+ctx.drawImage(count3,320,210);
+//console.log("3");
+}
+}
+
+
+function draw2(){
+c3=false;
+c2=true;
+
+}
+function d2(){
+if(c2==true){
+
+ctx.drawImage(count2,320,210);
+//console.log("2");
+}
+}
+
+function draw1(){
+c2=false;
+c1=true;
+
+}
+function d1(){
+if(c1==true){
+
+ctx.drawImage(count1,320,210);
+//console.log("1");
+}
+}
+function drawgo(){
+c1=false;
+cgo=true;
+
+}
+function dgo(){
+if(cgo==true){
+ctx.clearRect(320,210,60,80);
+ctx.drawImage(go,320,210);
+//console.log("go");
+}
+}
+function clearcount(){
+cgo=false;
+ctx.clearRect(320,210,60,80);
+
+}
+
+function roop(){//たくさん呼ばれる関数。描画と車動くのを呼んでる
+if(escpressed==true){
+socket.emit("escreset");
+}
+
+
+
+if(alogin==true){//draw系はここにまとめないとちらつく
+draw();
+d3();
+d2();
+d1();
+dgo();
+
+}else{
+//sitamove();//イベント発火だから勝手に動く
+drawpsele();
+
+}
+
+
+if(login==true){
+    
+    
+    calc();
+    mycarmove();
+morecarsmove1();
+morecarsmove2();
+morecarsmove3();
+// console.log(mycarx,mycary) 
+
+//setTimeout(roop,16);
+}
+}
+    document.addEventListener("keydown",keyDownHandler);
+document.addEventListener("keyup",keyUpHandler);
+
+
+
+</script>
+</head>
+<body>
+
+
+
+
+</body>
 </html>
+
+
+
+
+
